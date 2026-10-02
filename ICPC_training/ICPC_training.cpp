@@ -1,48 +1,35 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
+
 #include <iostream>
 #include <vector>
 #include <cstdio>
+#include <algorithm>
+#include <iomanip>
 
 using namespace std;
 
 int main() {
-	/*if (!freopen("INPUT.TXT", "r", stdin)) return 1;
-	if (!freopen("OUTPUT.TXT", "w", stdout)) return 1;*/
+	if (!freopen("INPUT.TXT", "r", stdin)) return 1;
+	if (!freopen("OUTPUT.TXT", "w", stdout)) return 2;
 
 	int n;
 	cin >> n;
 
-	vector<double> temperatures(n);
-	for (int i = 0; i < n; i++) 
-		cin >> temperatures[i];
+	double minPrice;
+	cin >> minPrice;
 
-	int k = 5;
-	vector<bool> isNotAbove8C(k);
-	bool isTurnOn = true;
+	double maxRevenue = 0.0;
 
-	for (int i = 0; i < k; i++) {
-		isNotAbove8C[i] = (temperatures[i] <= 8);
-		isTurnOn = isTurnOn && isNotAbove8C[i];
+	for (int i = 1; i < n; i++) {
+		double currentPrice;
+		cin >> currentPrice;
+
+		maxRevenue = max(maxRevenue, currentPrice - minPrice);
+
+		minPrice = min(minPrice, currentPrice);
 	}
 
-	if (isTurnOn) cout << 6;
-	else {
-		int dayOfTurnOn = 0;
-
-		for (int i = k; i < n && !isTurnOn; i++) {
-			isTurnOn = true;
-			isNotAbove8C[(i % k)] = (temperatures[i] <= 8);
-
-			for (bool b : isNotAbove8C) {
-				isTurnOn = isTurnOn && b;
-				if (!isTurnOn) break;
-			}
-
-			if (isTurnOn) dayOfTurnOn = i + 2;
-		}
-
-		cout << dayOfTurnOn;
-	}
+	cout << fixed << setprecision(1) << maxRevenue;
 
 	return 0;
 }
