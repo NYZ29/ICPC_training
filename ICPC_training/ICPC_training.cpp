@@ -1,56 +1,73 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 
 #include <iostream>
-#include <cstdio>
 #include <vector>
-#include <queue>
+#include <cstdio>
+#include <string>
 
 using namespace std;
 
 int main() {
-	if (!freopen("INPUT.TXT", "r", stdin)) return 1;
-	if (!freopen("OUTPUT.TXT", "w", stdout)) return 2;
+	/*if (!freopen("INPUT.TXT", "r", stdin)) return 1;
+	if (!freopen("OUTPUT.TXT", "w", stdout)) return 2;*/
 
-	int n;
-	cin >> n;
+	string text;
+	cin >> text;
 
-	for (int labytinthNumber = 1; labytinthNumber <= n; labytinthNumber++) {
-		int k, m;
-		cin >> k >> m;
+	vector<string> st;
 
-		vector<vector<int>> graph(k);
+	for (char c : text) {
+		if (c == '(') st.push_back("(");
+		else if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z') st.push_back(string(1, c));
+		else {
+			vector<string> parts;
 
-		for (int j = 0; j < m; j++) {
-			int a, b;
-			cin >> a >> b;
+			while (st.back() != "(") {
+				parts.push_back(st.back());
+				st.pop_back();
+			}
 
-			graph[a].push_back(b);
-			graph[b].push_back(a);
-		}
+			st.pop_back();
 
-		vector<bool> used(k, false);
-		queue<int> q;
+			string inside;
 
-		used[0] = true;
-		q.push(0);
+			for (int i = (int)parts.size() - 1; i >= 0; i--) {
+				inside += parts[i];
+			}
 
-		while (!q.empty()) {
-			int currentRoom = q.front();
-			q.pop();
+			if (inside.empty()) continue;
 
-			for (int nextRoom : graph[currentRoom]) {
-				if (!used[nextRoom]) {
-					used[nextRoom] = true;
-					q.push(nextRoom);
+			if (inside.front() == '(' && inside.back() == ')') {
+				int balance = 0;
+				bool oneGroup = true;
+
+				for (int i = 0; i < (int)inside.size(); i++) {
+					if (inside[i] == '(') balance++;
+					else if (inside[i] == ')') balance--;
+
+					if (balance == 0 && i != (int)inside.size() - 1) {
+						oneGroup = false;
+						break;
+					}
+				}
+
+				if (oneGroup) {
+					st.push_back(inside);
+					continue;
 				}
 			}
-		}
 
-		if (used[k - 1]) {
-			cout << labytinthNumber;
-			return 0;
+			st.push_back("(" + inside + ")");
 		}
 	}
+
+	string answer;
+
+	for (const string& part : st) {
+		answer += part;
+	}
+
+	cout << answer;
 
 	return 0;
 }
