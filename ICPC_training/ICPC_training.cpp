@@ -1,73 +1,34 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 
 #include <iostream>
-#include <vector>
 #include <cstdio>
-#include <string>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
 int main() {
-	/*if (!freopen("INPUT.TXT", "r", stdin)) return 1;
-	if (!freopen("OUTPUT.TXT", "w", stdout)) return 2;*/
+	if (!freopen("INPUT.TXT", "r", stdin)) return 1;
+	if (!freopen("OUTPUT.TXT", "w", stdout)) return 2;
 
-	string text;
-	cin >> text;
+	int n;
+	cin >> n;
 
-	vector<string> st;
+	vector<long long> price(n + 1);
 
-	for (char c : text) {
-		if (c == '(') st.push_back("(");
-		else if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z') st.push_back(string(1, c));
-		else {
-			vector<string> parts;
+	for (int i = 1; i <= n; i++) {
+		cin >> price[i];
+	}
 
-			while (st.back() != "(") {
-				parts.push_back(st.back());
-				st.pop_back();
-			}
+	vector<long long> dp(n + 1, 0);
 
-			st.pop_back();
-
-			string inside;
-
-			for (int i = (int)parts.size() - 1; i >= 0; i--) {
-				inside += parts[i];
-			}
-
-			if (inside.empty()) continue;
-
-			if (inside.front() == '(' && inside.back() == ')') {
-				int balance = 0;
-				bool oneGroup = true;
-
-				for (int i = 0; i < (int)inside.size(); i++) {
-					if (inside[i] == '(') balance++;
-					else if (inside[i] == ')') balance--;
-
-					if (balance == 0 && i != (int)inside.size() - 1) {
-						oneGroup = false;
-						break;
-					}
-				}
-
-				if (oneGroup) {
-					st.push_back(inside);
-					continue;
-				}
-			}
-
-			st.push_back("(" + inside + ")");
+	for (int len = 1; len <= n; len++) {
+		for (int piece = 1; piece <= len; piece++) {
+			dp[len] = max(dp[len], price[piece] + dp[len - piece]);
 		}
 	}
 
-	string answer;
-
-	for (const string& part : st) {
-		answer += part;
-	}
-
-	cout << answer;
-
+	cout << dp[n];
+	
 	return 0;
 }
