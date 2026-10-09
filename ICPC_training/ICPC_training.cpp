@@ -1,33 +1,48 @@
-﻿/*
-#define _CRT_SECURE_NO_WARNINGS
-#include <cstdio>
-*/
-#include <iostream>
-#include <string>
+﻿#include <iostream>
+#include<vector>
 #include <algorithm>
+#include <map>
 
 using namespace std;
 
 int main() {
-	/*if (!freopen("INPUT.TXT", "r", stdin)) return 1;
-	if (!freopen("OUTPUT.TXT", "w", stdout)) return 2;*/
+	int t;
+	cin >> t;
 
-	int q;
-	cin >> q;
+	while (t--) {
+		int n, k;
+		cin >> n >> k;
 
-	for (int i = 0; i < q; i++) {
-		string word1, word2;
-		cin >> word1 >> word2;
+		map<int, int> cnt;
+		for (int i = 0; i < n; i++) {
+			int x;
+			cin >> x;
+			cnt[x]++;
+		}
 
-		int equalStart = -1;
-		int minLen = min(word1.size(), word2.size());
+		vector<pair<int, int>> values(cnt.begin(), cnt.end());
 
-		while (equalStart < minLen - 1 && word1[equalStart + 1] == word2[equalStart + 1]) equalStart++;
+		int answer = 0;
+		int left = 0;
+		int sum = 0;
 
-		int neededTime = word1.size() + word2.size();
-		if (equalStart != -1) neededTime -= equalStart;
+		for (int right = 0; right < (int)values.size(); right++) {
+			if (right > 0 && values[right].first != values[right - 1].first + 1) {
+				left = right;
+				sum = 0;
+			}
 
-		cout << neededTime << '\n';
+			sum += values[right].second;
+
+			while (right - left + 1 > k) {
+				sum -= values[left].second;
+				left++;
+			}
+
+			answer = max(answer, sum);
+		}
+
+		cout << answer << '\n';
 	}
 
 	return 0;
