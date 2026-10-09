@@ -1,20 +1,34 @@
-﻿// ICPC_training.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
-
+﻿/*
+#define _CRT_SECURE_NO_WARNINGS
+#include <cstdio>
+*/
 #include <iostream>
+#include <string>
+#include <algorithm>
 
-int main()
-{
-    std::cout << "Hello World!\n";
+using namespace std;
+
+int main() {
+	/*if (!freopen("INPUT.TXT", "r", stdin)) return 1;
+	if (!freopen("OUTPUT.TXT", "w", stdout)) return 2;*/
+
+	int q;
+	cin >> q;
+
+	for (int i = 0; i < q; i++) {
+		string word1, word2;
+		cin >> word1 >> word2;
+
+		int equalStart = -1;
+		int minLen = min(word1.size(), word2.size());
+
+		while (equalStart < minLen - 1 && word1[equalStart + 1] == word2[equalStart + 1]) equalStart++;
+
+		int neededTime = word1.size() + word2.size();
+		if (equalStart != -1) neededTime -= equalStart;
+
+		cout << neededTime << '\n';
+	}
+
+	return 0;
 }
-
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
-
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
